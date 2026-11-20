@@ -1,0 +1,317 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpendWise | Expense Tracker</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+<div class="app-layout">
+
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">S</div>
+            <div>
+                <h2>SpendWise</h2>
+                <span>SMART MONEY TRACKER</span>
+            </div>
+        </div>
+
+        <p class="sidebar-label">MAIN MENU</p>
+
+        <nav>
+            <a href="#dashboard" class="nav-link active">▦ Dashboard</a>
+            <a href="#add-expense" class="nav-link">＋ Add Expense</a>
+            <a href="#budget" class="nav-link">◷ Monthly Budget</a>
+            <a href="#analytics" class="nav-link">▥ Analytics</a>
+            <a href="#transactions" class="nav-link">☷ Transactions</a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="sidebar-tip">
+                <div class="tip-icon">✦</div>
+                <h3>Smart money tip</h3>
+                <p>Track your spending regularly to build better financial habits.</p>
+            </div>
+            <div class="sidebar-footer">SpendWise © 2026</div>
+        </div>
+    </aside>
+
+
+    <main class="main-content">
+
+        <header class="topbar" id="dashboard">
+            <div>
+                <p class="eyebrow">YOUR FINANCIAL OVERVIEW</p>
+                <h1>Dashboard</h1>
+                <p class="welcome-text">Manage your money. Make every rupee count.</p>
+            </div>
+            <div class="topbar-date">
+                <span>▣</span>
+                <span id="todayDate"></span>
+            </div>
+        </header>
+
+
+        <section class="summary-grid">
+            <div class="summary-card">
+                <div class="card-top">
+                    <div class="summary-icon purple-icon">₹</div>
+                    <span class="card-tag">ALL TIME</span>
+                </div>
+                <p class="summary-label">Total Expenses</p>
+                <h2 id="totalExpenses">₹0.00</h2>
+                <p class="card-description">Your overall spending</p>
+            </div>
+
+            <div class="summary-card">
+                <div class="card-top">
+                    <div class="summary-icon green-icon">↗</div>
+                    <span class="card-tag">THIS MONTH</span>
+                </div>
+                <p class="summary-label">Monthly Expenses</p>
+                <h2 id="monthlyExpenses">₹0.00</h2>
+                <p class="card-description">Spending in the current month</p>
+            </div>
+
+            <div class="summary-card">
+                <div class="card-top">
+                    <div class="summary-icon orange-icon">☷</div>
+                    <span class="card-tag">ACTIVITY</span>
+                </div>
+                <p class="summary-label">Total Transactions</p>
+                <h2 id="totalTransactions">0</h2>
+                <p class="card-description">Recorded expenses</p>
+            </div>
+        </section>
+
+
+        <section id="add-expense" class="content-section">
+            <div class="section-heading">
+                <div>
+                    <h2 id="formHeading">Add a new expense</h2>
+                    <p>Record your spending details below.</p>
+                </div>
+            </div>
+
+            <div class="form-card">
+                <form id="expenseForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="expenseName">Expense Name</label>
+                            <input type="text" id="expenseName" placeholder="Example: Groceries" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="amount">Amount (₹)</label>
+                            <input type="number" id="amount" min="0.01" step="0.01" placeholder="Enter amount" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="category">Category</label>
+                            <select id="category" required>
+                                <option value="">Select Category</option>
+                                <option>Food</option>
+                                <option>Travel</option>
+                                <option>Shopping</option>
+                                <option>Education</option>
+                                <option>Bills</option>
+                                <option>Entertainment</option>
+                                <option>Health</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="expenseDate">Date</label>
+                            <input type="date" id="expenseDate" required>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" id="cancelButton" class="secondary-button" hidden>Cancel</button>
+                        <button type="submit" id="submitButton" class="primary-button">＋ Add Expense</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+
+        <section id="budget" class="content-section">
+            <div class="section-heading">
+                <div>
+                    <h2>Monthly Budget</h2>
+                    <p>Set a spending limit and monitor your progress.</p>
+                </div>
+            </div>
+
+            <div class="budget-card">
+                <div class="budget-form">
+                    <div class="form-group">
+                        <label for="budgetMonth">Select Month</label>
+                        <input type="month" id="budgetMonth">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="budgetAmount">Monthly Budget (₹)</label>
+                        <input type="number" id="budgetAmount" min="0.01" step="0.01" placeholder="Enter your budget">
+                    </div>
+
+                    <button type="button" id="saveBudget" class="primary-button">Save Budget</button>
+                </div>
+
+                <div class="budget-overview">
+                    <div class="budget-stat">
+                        <span>Monthly Budget</span>
+                        <strong id="budgetTotal">₹0.00</strong>
+                    </div>
+                    <div class="budget-stat">
+                        <span>Amount Spent</span>
+                        <strong id="budgetSpent">₹0.00</strong>
+                    </div>
+                    <div class="budget-stat">
+                        <span>Remaining</span>
+                        <strong id="budgetRemaining">₹0.00</strong>
+                    </div>
+                </div>
+
+                <div class="budget-progress-area">
+                    <div class="budget-progress-heading">
+                        <span id="budgetStatus">Set a budget to get started</span>
+                        <strong id="budgetPercentage">0%</strong>
+                    </div>
+                    <div class="budget-progress">
+                        <div id="budgetProgressBar"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="analytics" class="content-section">
+            <div class="section-heading">
+                <div>
+                    <h2>Spending Analytics</h2>
+                    <p>Understand where your money goes.</p>
+                </div>
+            </div>
+
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <div class="chart-heading">
+                        <div>
+                            <h3>Category Breakdown</h3>
+                            <p>Spending by category</p>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-heading">
+                        <div>
+                            <h3>Monthly Spending</h3>
+                            <p>Spending over time</p>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="monthlyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="transactions" class="content-section">
+            <div class="section-heading">
+                <div>
+                    <h2>Transactions</h2>
+                    <p>Search, filter and download your expense records.</p>
+                </div>
+                <span class="transaction-count" id="recentCount">0 records</span>
+            </div>
+
+            <div class="filter-card">
+                <div class="filter-grid">
+                    <div class="form-group">
+                        <label for="searchInput">Search by name</label>
+                        <input type="search" id="searchInput" placeholder="Search expenses...">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="filterCategory">Category</label>
+                        <select id="filterCategory">
+                            <option value="">All Categories</option>
+                            <option>Food</option>
+                            <option>Travel</option>
+                            <option>Shopping</option>
+                            <option>Education</option>
+                            <option>Bills</option>
+                            <option>Entertainment</option>
+                            <option>Health</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="startDate">From Date</label>
+                        <input type="date" id="startDate">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="endDate">To Date</label>
+                        <input type="date" id="endDate">
+                    </div>
+                </div>
+
+                <div class="filter-actions">
+                    <button type="button" id="clearFilters" class="secondary-button">Clear Filters</button>
+                    <button type="button" id="exportButton" class="primary-button">↓ Export CSV</button>
+                </div>
+            </div>
+
+            <div class="expense-list" id="expenseList"></div>
+        </section>
+
+
+        <footer class="main-footer">
+            Made with care using Flask, Python, JavaScript and SQLite.
+        </footer>
+
+    </main>
+</div>
+
+
+<div id="toast" class="toast">
+    <span class="toast-icon">✓</span>
+    <span id="toastMessage"></span>
+</div>
+
+
+<div id="confirmOverlay" class="confirm-overlay" hidden>
+    <div class="confirm-box">
+        <div class="confirm-icon">!</div>
+        <h3>Delete this expense?</h3>
+        <p>This expense will be permanently removed from your records.</p>
+        <div class="confirm-actions">
+            <button type="button" id="keepExpense" class="secondary-button">Keep it</button>
+            <button type="button" id="confirmDelete" class="danger-button">Yes, delete</button>
+        </div>
+    </div>
+</div>
+
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
